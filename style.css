@@ -1,0 +1,17 @@
+.center {
+  text-align: center;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+button {
+  padding: 20px;
+  width: 300px;
+  cursor: pointer;
+  background-color: aquamarine;
+}

@@ -1,50 +1,78 @@
 let humanScore = 0;
 let computerScore = 0;
 const gameChoice = ["rock", "paper", "scissors"];
+let roundGame = 1;
+const roundElement = document.querySelector("#round");
+const btnContainer = document.querySelector(".btn-container");
+const h3Element = document.querySelector("h3");
+const result = document.querySelector("#result");
 
 function getComputerChoice() {
   let index = Math.floor(Math.random() * gameChoice.length);
   return gameChoice[index];
 }
 
-function getHumanChoice() {
-  let playerChoice = prompt(" Please type either rock, paper, or scissors? ");
-  return playerChoice.toLocaleLowerCase();
-}
+function playRound(humanSelection) {
+  const computerSelection = getComputerChoice();
 
-function playRound(getComputerChoice, getHumanChoice) {
-  if (getComputerChoice === "rock" && getHumanChoice === "scissors") {
+  if (computerSelection === "rock" && humanSelection === "scissors") {
     computerScore++;
-    console.log(`You lose ${getComputerChoice} beats ${getHumanChoice}!`);
-  } else if (getComputerChoice === "scissors" && getHumanChoice === "paper") {
+    result.textContent = `You lose ${computerSelection} beats ${humanSelection}!`;
+  } else if (computerSelection === "scissors" && humanSelection === "paper") {
     computerScore++;
-    console.log(`You lose ${getComputerChoice} beats ${getHumanChoice}!`);
-  } else if (getComputerChoice === "paper" && getHumanChoice === "rock") {
+    result.textContent = `You lose ${computerSelection} beats ${humanSelection}!`;
+  } else if (computerSelection === "paper" && humanSelection === "rock") {
     computerScore++;
-    console.log(`You lose ${getComputerChoice} beats ${getHumanChoice}!`);
-  } else if (getComputerChoice === getHumanChoice) {
-    console.log(
-      `You tie! Computer select ${getComputerChoice}: You select ${getHumanChoice}`
-    );
+    result.textContent = `You lose ${computerSelection} beats ${humanSelection}!`;
+  } else if (computerSelection === humanSelection) {
+    result.textContent = `You tie! Computer select ${computerSelection}: You select ${humanSelection}`;
   } else {
     humanScore++;
-    console.log(`You win ${getHumanChoice} beats ${getComputerChoice}`);
+    result.textContent = `You win ${humanSelection} beats ${computerSelection}`;
+  }
+  roundGame++;
+  setScore();
+  if (roundGame > 5) {
+    roundElement.textContent = "GAME OVER!!!";
+    endGame();
   }
 }
 
-function playGame() {
-  for (let index = 0; index < 5; index++) {
-    const computerSelection = getComputerChoice();
-    const humanSelection = getHumanChoice();
-    playRound(computerSelection, humanSelection);
-  }
+function endGame() {
+  btnContainer.style.display = "none";
+  h3Element.style.display = "none";
   if (humanScore > computerScore) {
-    return `Player wins game: Final Score: Your score ${humanScore} - Computer score ${computerScore} `;
+    result.textContent = `Player wins game: Final Score: Your score ${humanScore} - Computer score ${computerScore} `;
+    result.style.color = "green";
   } else if (humanScore === computerScore) {
-    return `No winner game is tie: Final Score: Your score ${humanScore} - Computer score ${computerScore}`;
+    result.textContent = `No winner game is tie: Final Score: Your score ${humanScore} - Computer score ${computerScore}`;
+    result.style.color = "blue";
   } else {
-    return `Computer wins game: Final Score: Your score ${humanScore} - Computer score ${computerScore} `;
+    result.textContent = `Computer wins game: Final Score: Your score ${humanScore} - Computer score ${computerScore} `;
+    result.style.color = "red";
   }
 }
 
-console.log(playGame());
+function setScore() {
+  const playerScore = document.querySelector("#humanScore");
+  const compScore = document.querySelector("#computerScore");
+  roundElement.textContent = `Round ${roundGame} of 5`;
+  playerScore.textContent = `Human score is ${humanScore}`;
+  compScore.textContent = `Computer score is ${computerScore}`;
+  if (roundGame > 5) {
+    playerScore.style.display = "none";
+    compScore.style.display = "none";
+  }
+}
+
+function setUpButtonListener() {
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      playRound(e.target.id);
+    });
+  });
+}
+
+setScore();
+setUpButtonListener();
